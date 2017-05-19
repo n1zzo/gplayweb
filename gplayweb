@@ -51,6 +51,8 @@ class MainHandler(tornado.web.RequestHandler):
 			self.empty_cache()
 		elif page == 'fdroid-forceupdate':
 			self.fdroid_forceupdate()
+                elif page == 'updateapks':
+                        self.update_apks()
 		else:
 			return
 
@@ -108,6 +110,10 @@ class MainHandler(tornado.web.RequestHandler):
 	def fdroid_forceupdate(self):
 		self.update_fdroid()
 		self.redirect('list')
+
+        def update_apks(self):
+                self.cli.prepare_analyse_apks()
+                self.redirect('list')
 
 	# Search an apk by string
 	def search(self):
@@ -270,6 +276,8 @@ def main():
 
 	# Parsing conffile
 	cli = GPlaycli(cli_args.CONFFILE)
+        # Auto confirm cli actions
+        cli.yes = True
 	# Connect to API
 	cli.connect_to_googleplay_api()
 
